@@ -1,0 +1,3 @@
+<?php
+use Illuminate\Database\Migrations\Migration;use Illuminate\Database\Schema\Blueprint;use Illuminate\Support\Facades\Schema;
+return new class extends Migration {public function up():void{Schema::create('schedules',function(Blueprint $t){$t->id();$t->foreignId('teaching_assignment_id')->constrained()->cascadeOnDelete();$t->foreignId('room_id')->constrained()->cascadeOnDelete();$t->foreignId('period_id')->constrained()->cascadeOnDelete();$t->unsignedTinyInteger('session_number')->default(1);$t->boolean('locked')->default(false);$t->decimal('optimization_score',6,2)->default(0);$t->timestamps();$t->unique(['teaching_assignment_id','session_number']);});}public function down():void{Schema::dropIfExists('schedules');}};

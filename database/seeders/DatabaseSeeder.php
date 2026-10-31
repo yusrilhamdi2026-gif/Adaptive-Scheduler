@@ -1,0 +1,13 @@
+<?php
+namespace Database\Seeders;
+use Illuminate\Database\Seeder;use Illuminate\Support\Facades\Hash;use App\Models\{User,Teacher,Subject,SchoolClass,Room,Period,TeachingAssignment,OptimizationWeight};
+class DatabaseSeeder extends Seeder {public function run():void{
+ $teachers=[];foreach([['Andi Saputra','198001'],['Siti Rahma','198002'],['Budi Santoso','198003']] as $x)$teachers[]=Teacher::create(['name'=>$x[0],'nip'=>$x[1],'email'=>strtolower(str_replace(' ','',$x[0])).'@school.test']);
+ $subjects=[];foreach([['Pemrograman Web',4,'lab'],['Basis Data',3,'lab'],['Matematika',4,'kelas'],['Bahasa Indonesia',2,'kelas']] as $x)$subjects[]=Subject::create(['name'=>$x[0],'weekly_hours'=>$x[1],'room_type'=>$x[2]]);
+ $classes=[];foreach([['X RPL 1','X','RPL',32],['XI RPL 1','XI','RPL',30],['XII RPL 1','XII','RPL',28]] as $x)$classes[]=SchoolClass::create(['name'=>$x[0],'grade'=>$x[1],'major'=>$x[2],'student_count'=>$x[3]]);
+ foreach([['Lab Komputer 1',36,'lab'],['Lab Komputer 2',32,'lab'],['Ruang 1',36,'kelas'],['Ruang 2',32,'kelas']] as $x)Room::create(['name'=>$x[0],'capacity'=>$x[1],'room_type'=>$x[2],'is_available'=>true]);
+ $days=['Senin','Selasa','Rabu','Kamis','Jumat'];$times=[['07:30','08:15'],['08:15','09:00'],['09:15','10:00'],['10:00','10:45'],['10:45','11:30'],['12:30','13:15'],['13:15','14:00']];foreach($days as $day)foreach($times as $i=>$time)Period::create(['day'=>$day,'period_number'=>$i+1,'start_time'=>$time[0],'end_time'=>$time[1],'is_break'=>$i===2]);
+ foreach($classes as $ci=>$class)foreach($subjects as $si=>$subject){$teacher=$teachers[($ci+$si)%count($teachers)];TeachingAssignment::create(['teacher_id'=>$teacher->id,'subject_id'=>$subject->id,'school_class_id'=>$class->id,'weekly_hours'=>min($subject->weekly_hours,3)]);}
+ User::create(['name'=>'Administrator','email'=>'admin@school.test','password'=>Hash::make('password'),'role'=>'admin']);User::create(['name'=>$teachers[0]->name,'email'=>'guru@school.test','password'=>Hash::make('password'),'role'=>'guru','teacher_id'=>$teachers[0]->id]);
+ foreach([['teacher_preference',25,'Kesesuaian jam pilihan guru'],['distribution',25,'Pemerataan jadwal dalam satu hari'],['period_suitability',20,'Prioritas jam belajar'],['room_utilization',20,'Efisiensi kapasitas ruang'],['stability',10,'Menjaga kestabilan jadwal']] as $w)OptimizationWeight::create(['criterion'=>$w[0],'weight'=>$w[1],'description'=>$w[2]]);
+}}

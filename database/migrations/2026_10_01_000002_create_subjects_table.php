@@ -1,0 +1,3 @@
+<?php
+use Illuminate\Database\Migrations\Migration;use Illuminate\Database\Schema\Blueprint;use Illuminate\Support\Facades\Schema;
+return new class extends Migration {public function up():void{Schema::create('subjects',function(Blueprint $t){$t->id();$t->string('name');$t->unsignedTinyInteger('weekly_hours')->default(2);$t->string('room_type')->nullable();$t->timestamps();});}public function down():void{Schema::dropIfExists('subjects');}};

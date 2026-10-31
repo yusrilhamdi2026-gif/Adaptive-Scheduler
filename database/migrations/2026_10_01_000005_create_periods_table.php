@@ -1,0 +1,3 @@
+<?php
+use Illuminate\Database\Migrations\Migration;use Illuminate\Database\Schema\Blueprint;use Illuminate\Support\Facades\Schema;
+return new class extends Migration {public function up():void{Schema::create('periods',function(Blueprint $t){$t->id();$t->string('day');$t->unsignedTinyInteger('period_number');$t->time('start_time');$t->time('end_time');$t->boolean('is_break')->default(false);$t->timestamps();$t->unique(['day','period_number']);});}public function down():void{Schema::dropIfExists('periods');}};
